@@ -1,0 +1,70 @@
+//============================================================================
+// Name        : Ejerc2.cpp
+// Author      : Francisco Molina, Jonathan Areas
+// Version     : Ultimate
+// Copyright   : N.A.
+// Description : Ingresar en una matriz las ventas de un vector de vendedores,
+//				calcular su total por vendedor y su promedio trimestral.
+//============================================================================
+
+#include <iostream>
+using namespace std;
+//Este ejercicio fue realizado por: Jon Areas, Francisco Molina.
+void initVector(string vector[]);
+void initMatriz(double matriz[][5], string vector[]);
+void getTotal(double matriz[][5]);
+void tabla(double matriz[][5], string vector[]);
+int m;
+
+int main() {
+    do {
+        cout << "Cuantos vendedores desea ingresar?" << endl;
+        cout << "NOTA: Cantidad de elementos ingresados debe ser un entero positivo." << endl;
+        cin >> m;
+    } while (m <= 0);
+    auto * nombres = new string[m];
+    initVector(nombres);
+    auto * ventas = new double[m][5];
+    initMatriz(ventas, nombres);
+    getTotal(ventas);
+    tabla(ventas, nombres);
+    return 0;
+}
+
+
+void initVector(string vector[]) {
+    for (int i = 0; i < m; i++) {
+        cout << "Introduzca el nombre del vendedor #" << i + 1 << endl;
+        cin >> vector[i];
+    }
+}
+
+void initMatriz(double matriz[][5], string vector[])
+{
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < 3; j++) {
+            cout << "Introduzca la venta del vendedor " << vector[i] << ", en el mes #" << j + 1 << " del trimestre." << endl;
+            cin >> matriz[i][j];
+        }
+    }
+}
+
+void getTotal(double matriz[][5]) {
+    for (int i = 0; i < m; i++) {
+        matriz[i][3] = {};
+        matriz[i][4] = {};
+        for (int j = 0; j < 3; j++) {
+            matriz[i][3] += matriz[i][j]; //Total
+        }
+        matriz[i][4] = matriz[i][3] / 3; //Promedio
+    }
+}
+
+void tabla(double matriz[][5], string vector[])
+{
+    cout << "\t \t Ventas trimestrales 2020\n";
+    cout << "Vendedor\t Julio\t Agosto\t Sept\t Total\t Promedio\t\n";
+    for (int i = 0; i < m; i++) {
+        cout << vector[i] << ":\t\t " << matriz[i][0] << "\t " << matriz[i][1] << "\t " << matriz[i][2] << "\t " << matriz[i][3] << "\t " << matriz[i][4] << "\t " << "\n";
+    }
+}

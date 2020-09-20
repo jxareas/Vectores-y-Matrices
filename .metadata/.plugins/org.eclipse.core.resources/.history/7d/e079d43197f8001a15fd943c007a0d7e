@@ -1,0 +1,164 @@
+//============================================================================
+// Name        : Ejerc6.cpp
+// Author      : Emiliano Urbina
+// Version     : Ultimate
+// Copyright   : N.A.
+// Description : Ingresar una lista de nombres en pilas y colas.
+//============================================================================
+
+#include <iostream>
+#include <stdlib.h>
+using namespace std;
+
+#define maxSize 10
+#define secondMaxSize 10
+
+struct pila{
+    int cola;
+    string names[maxSize];
+};
+
+struct columna{
+    int entrada, salida;
+    string items[secondMaxSize];
+};
+
+void crear(struct pila *nuevo){
+    nuevo->cola = -1;
+}
+
+void apilar(struct pila *last, string input){
+    last->cola++;
+    last->names[last->cola] = input;
+    return;
+}
+
+void desapilar(struct pila *deletedObj, string *elem){
+    *elem = deletedObj->names[deletedObj->cola--];
+}
+
+void desencolar(struct columna *arrow, string *contentVar){
+    arrow->salida++;
+    *contentVar = arrow->items[arrow->salida];
+
+    if(arrow->salida == arrow->entrada){
+        arrow->salida = 0;
+        arrow->entrada = 0;
+    };
+    return;
+}
+
+int llena(struct pila *cant){
+    return(cant->cola == maxSize);
+}
+
+int vacia(struct pila *pila){
+    return (pila->cola == -1);
+}
+
+void crearCola(struct columna *lastIndex){
+    lastIndex->salida = lastIndex->entrada = 0;
+    return;
+}
+
+void encolar(struct columna *obj, string elem){
+    obj->entrada++;
+    obj->items[obj->entrada] = elem;
+
+    if(obj->salida > obj->entrada){
+        obj->salida = 0;
+        obj->entrada = secondMaxSize-1;
+    };
+    return;
+}
+
+int full(struct columna *maxItem){
+    return(maxItem->entrada == secondMaxSize);
+}
+
+int empety(struct columna *pointerElement){
+    return(pointerElement->salida >= pointerElement->entrada);
+}
+
+int main(void) {
+    struct pila cola;
+    struct columna last;
+    int x;
+    string auxVar;
+    int i = 0;
+    char inputName[30];
+    string convertElement;
+
+    crear(&cola);
+    crearCola(&last);
+    cout<<"Cuantos nombres desea ingresar?"<<endl;
+    cin>>x;
+    cout<<"Ingrese "<<x<<" nombres."<<endl;
+    do{
+        if(llena(&cola)){
+            cout<<"No hay mas espacios."<<endl;
+        }else{
+            gets(inputName);
+            convertElement = inputName;
+            auxVar = inputName;
+            apilar(&cola, convertElement);
+            encolar(&last, auxVar);
+        };
+        i++;
+    }while(i < x+1);
+
+    cout<<"Estos fueron los elementos ingresados por usted (estructura tipo LIFO): "<<endl;
+    for(int z = 0; z < cola.cola+1; z++){
+        cout<<cola.names[z]<<endl;
+    };
+
+    cout<<"Estos fueron los elementos ingresados por usted (estructura tipo FIFO): "<<endl;
+    for(int z = 0; z < last.entrada+1; z++){
+        cout<<last.items[z]<<endl;
+    };
+
+
+    int opcion;
+    cout<<"Desea eliminar algun elemento? si(1)/no(0)"<<endl;
+    cin>>opcion;
+    switch(opcion){
+        case 1:
+            int seleccion;
+            cout<<"Elija la cantidad de elemento a eliminar (Se eliminaran elementos de ambas estructuras)"<<endl;
+            cin>>seleccion;
+
+            for(int y = 0; y < seleccion; y++){
+                if(vacia(&cola)){
+                    cout<<"No hay mas elementos que eliminar (LIFO)."<<endl;
+                }else {
+                    desapilar(&cola, &convertElement);
+                };
+            };
+
+            for(int x = 0; x < seleccion; x++){
+                if(empety(&last)){
+                    cout<<"No hay mas elementos que eliminar (FIFO)."<<endl;
+                }else{
+                    desencolar(&last, &auxVar);
+                };
+            };
+
+            cout<<"Elementos restantes de la estructura LIFO:"<<endl;
+            for(int o = 0; o < cola.cola+1; o++){
+                cout<<cola.names[o]<<endl;
+            };
+
+            cout<<"Elementos restantes de la estructura FIFO:"<<endl;
+            for(int o = 0; o < last.entrada+1; o++){
+                cout<<last.items[o]<<endl;
+            };
+
+            break;
+
+        case 0:
+            cout<<"Hasta la proxima."<<endl;
+            break;
+    };
+
+    return 0;
+}
